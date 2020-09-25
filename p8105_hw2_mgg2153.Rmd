@@ -5,14 +5,24 @@ date: "9/25/2020"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
+## Hello and welcome to the second homework
 
+The first order of business is to load the tidyverse!
+```{r setup, include=FALSE}
+library(tidyverse)
 ```
 
 
+### Problem 2: NYC transit data
 
-```{r cars}
-summary(cars)
+```{r nyc_transit}
+transit_df = read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
+  janitor::clean_names() %>%
+  select(line, station_name, station_latitude, station_longitude, route1:route11, entrance_type, entry, ada)
+
+print(transit_df)
+#I want to retain:  line, station, name, station latitude / longitude, routes served, entry, vending, entrance type, and ADA compliance
+  
 ```
 
 
