@@ -1,0 +1,23 @@
+---
+title: "p8105_hw2_mgg2153"
+author: "mggn"
+date: "9/25/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+
+```
+
+
+
+```{r cars}
+summary(cars)
+```
+
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+.
