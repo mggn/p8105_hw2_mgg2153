@@ -18,7 +18,11 @@ library(tidyverse)
 ```{r nyc_transit}
 transit_df = read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
   janitor::clean_names() %>%
-  select(line, station_name, station_latitude, station_longitude, route1:route11, entrance_type, entry, ada)
+  select(line, station_name, station_latitude, station_longitude, 
+         route1:route11, entrance_type, entry, ada) %>%
+  mutate(
+    entry = recode(entry, "YES" = "TRUE", "NO" = "FALSE")
+  )
 
 print(transit_df)
 #I want to retain:  line, station, name, station latitude / longitude, routes served, entry, vending, entrance type, and ADA compliance
