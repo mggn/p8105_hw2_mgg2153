@@ -29,9 +29,11 @@ print(transit_df)
   
 ```
 
+### Problem 3: FiveThirtyEight data
 
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r 538_data}
+pols_df = read_csv("./data/pols-month.csv") %>%
+  janitor::clean_names() %>%
+  separate(mon,into = c("month", "day", "year"))
 ```
 .
