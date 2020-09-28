@@ -44,10 +44,7 @@ code above, you can see that I:
 The dataset has **`r nrow(transit_df)`** observations and **`r ncol(transit_df)`** variables, 
 which are: **`r names(transit_df)`**  
 
-There are `r filter(transit_df, ada == "TRUE")`
 
-
-`r count()
 
 
 ```{r route_pivot}
@@ -71,6 +68,13 @@ print(transit_df_tidy)
 pols_df = read_csv("./data/pols-month.csv") %>%
   janitor::clean_names() %>%
   separate(mon,into = c("year", "month", "day")) %>%
+  mutate(
+    month = month.abb[as.factor(month)]
+  ) 
+
+snp_df = read_csv("./data/snp.csv") %>%
+  janitor::clean_names() %>%
+  separate(date,into = c("day", "month", "year")) %>%
   mutate(
     month = month.abb[as.factor(month)]
   ) 
