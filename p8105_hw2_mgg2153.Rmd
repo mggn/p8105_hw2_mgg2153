@@ -32,32 +32,50 @@ print(transit_df)
 #### About the NYC transit data
 
 This data set is about New York City's subway system, particularly the subway 
-exits and entrances.
+exits and entrances. It is important to note that the dataset being described 
+below is the original dataset but after some minor manipulation on my end. In the
+code above, you can see that I:  
+  -kept only certain variables using the retain function  
+  -recoded the variable entry to have true/false values using mutate and recode  
+  -changed the variable names so that they follow good style conventions (lower
+  case, with underscores in place of spaces) using the clean_names function from
+  the janitor library  
 
-The penguins dataset has **`r nrow(transit_df)`** observations and **`r ncol(transit_df)`** variables, 
-which are: **`r names(transit_df)`**
+The dataset has **`r nrow(transit_df)`** observations and **`r ncol(transit_df)`** variables, 
+which are: **`r names(transit_df)`**  
+
+There are `r filter(transit_df, ada == "TRUE")`
+
+
+`r count()
+
+
+```{r route_pivot}
+
+transit_df_tidy =
+pivot_longer(
+  transit_df,
+    route1:route7,
+    names_to = "route_num",
+    values_to = "route"
+  )
+
+print(transit_df_tidy)
+```
+
 
 ### Problem 3: FiveThirtyEight data
 
 ```{r 538_data}
-month_df =
-  tibble(
-    month = 1:12,
-    month_name = month.abb
-  )
 
 pols_df = read_csv("./data/pols-month.csv") %>%
   janitor::clean_names() %>%
   separate(mon,into = c("year", "month", "day")) %>%
   mutate(
-    month = as.integer(month),
-    year = as.integer(year),
-    day = as.integer(day)
-  )
-
-left_join(pols_df, month_df,by = "month") %>%
-  relocate(year, month_name) %>% 
-  select(-month)
+    month = month.abb[as.factor(month)]
+  ) 
+  
+    
 
 print(pols_df)
   
