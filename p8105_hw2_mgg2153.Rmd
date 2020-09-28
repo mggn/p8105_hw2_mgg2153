@@ -29,6 +29,14 @@ print(transit_df)
   
 ```
 
+#### About the NYC transit data
+
+This data set is about New York City's subway system, particularly the subway 
+exits and entrances.
+
+The penguins dataset has **`r nrow(transit_df)`** observations and **`r ncol(transit_df)`** variables, 
+which are: **`r names(transit_df)`**
+
 ### Problem 3: FiveThirtyEight data
 
 ```{r 538_data}
