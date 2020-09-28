@@ -35,8 +35,11 @@ print(transit_df)
 pols_df = read_csv("./data/pols-month.csv") %>%
   janitor::clean_names() %>%
   separate(mon,into = c("year", "month", "day")) %>%
-  mutate( 
-    month_name = month.abb(mon)
+  mutate (
+    month.abb[month]
   )
+
+print(pols_df)
+  
 ```
 .
