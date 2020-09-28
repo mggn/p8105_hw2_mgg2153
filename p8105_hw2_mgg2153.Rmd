@@ -32,12 +32,24 @@ print(transit_df)
 ### Problem 3: FiveThirtyEight data
 
 ```{r 538_data}
+month_df =
+  tibble(
+    month = 1:12,
+    month_name = month.abb
+  )
+
 pols_df = read_csv("./data/pols-month.csv") %>%
   janitor::clean_names() %>%
   separate(mon,into = c("year", "month", "day")) %>%
-  mutate (
-    month.abb[month]
+  mutate(
+    month = as.integer(month),
+    year = as.integer(year),
+    day = as.integer(day)
   )
+
+left_join(pols_df, month_df,by = "month") %>%
+  relocate(year, month_name) %>% 
+  select(-month)
 
 print(pols_df)
   
