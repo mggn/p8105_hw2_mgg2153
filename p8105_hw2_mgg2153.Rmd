@@ -74,12 +74,22 @@ And we can see that **69** stations without vending allow entry (this is actuall
 really cool info to be exploring lol)
 
 
+After running these commands, Jeff asks us:
+#### are these data tidy?
+
+To which I respond no! And Hadley Wickham would say "hell no"
+One example of the lack of tidiness is that the routes, for example, are treated
+as their own separate variables (ie, each route has its own column) when, to be
+normalized, the routes should be collapsed into one variable. We can normalize/
+"tidy" the data by using pivot_longer:
+
 ```{r route_pivot}
 
 transit_df_tidy =
-pivot_longer(
+  transit_df %>%
+  pivot_longer(
   transit_df,
-    route1:route7,
+    route1:route11,
     names_to = "route_num",
     values_to = "route"
   )
@@ -97,18 +107,37 @@ pols_df = read_csv("./data/pols-month.csv") %>%
   separate(mon,into = c("year", "month", "day")) %>%
   mutate(
     month = month.abb[as.factor(month)]
-  ) 
+  ) %>%
+  mutate(
+    president <- ifelse(prez_gop == 1, "gop", "dem")
+  ) %>%
+  select(-prez_gop, -prez_dem, -day)
+  
 
 snp_df = read_csv("./data/snp.csv") %>%
   janitor::clean_names() %>%
   separate(date,into = c("day", "month", "year")) %>%
   mutate(
-    month = month.abb[as.factor(month)]
-  ) 
+    month = month.abb[as.factor(month)],
+    year = as.factor(year)
+  ) %>%
+  relocate(year,month)
+
+unemployment_df = read_csv("./data/unemployment.csv") %>%
+  mutate(
+    Year = as.factor(Year)
+  ) %>%
+  pivot_longer(
+    Jan:Dec,
+    names_to = "month",
+    values_to = "pct_unemployed"
+  )
+ 
   
     
 
 print(pols_df)
+print(snp_df)
   
 ```
 .
