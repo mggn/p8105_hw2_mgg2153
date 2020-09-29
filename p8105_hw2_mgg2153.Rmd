@@ -87,6 +87,12 @@ The total precipitation in 2018 was **`r precip_df %>% filter(year == 2018) %>% 
 
 ### Problem 2: NYC transit data
 
+First, I want to
+(1) read in the data
+(2) clean the variable names to follow good naming conventions
+(3) keep only the variables I want
+(4) recode entry to TRUE/FALSE instead of YES/NO
+
 ```{r nyc_transit}
 transit_df = read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
   janitor::clean_names() %>%
@@ -95,24 +101,13 @@ transit_df = read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>
   mutate(
     entry = recode(entry, "YES" = "TRUE", "NO" = "FALSE")
   )
-
-print(transit_df)
-#I want to retain:  line, station, name, station latitude / longitude, routes served, 
-#entry, vending, entrance type, and ADA compliance
-  
 ```
 
 #### About the NYC transit data
 
 This data set is about New York City's subway system, particularly the subway 
 exits and entrances. It is important to note that the dataset being described 
-below is the original dataset but after some minor manipulation on my end. In the
-code above, you can see that I:  
-  -kept only certain variables using the retain function  
-  -recoded the variable entry to have true/false values using mutate and recode  
-  -changed the variable names so that they follow good style conventions (lower
-  case, with underscores in place of spaces) using the clean_names function from
-  the janitor library  
+below is the dataset that has been cleaned with the code above.
 
 The dataset has **`r nrow(transit_df)`** observations and **`r ncol(transit_df)`** variables, 
 which are: **`r names(transit_df)`**  
@@ -122,7 +117,6 @@ There are **`r transit_df %>% distinct(line, station_name) %>% count()`** distin
 There are **`r transit_df %>% filter(ada == "TRUE") %>% count()`** stations that are ADA compliant.
 
 And we can see that **`r transit_df %>% filter(vending == "NO" & entry == "TRUE") %>% count()`** stations without vending allow entry
-
 
 
 After running these commands, Jeff asks us:  
@@ -150,30 +144,13 @@ transit_df_tidy =
     names_to = "route_num",
     values_to = "route_name"
   )
-
-print(transit_df_tidy)
 ```
 
-And then finally, we can find the distinct stations for the A train, and of those,
-how many are ADA compliant:
 
-```{r}
-transit_df_tidy %>%
-  filter(route_name == "A") %>%
-  distinct(line, route_name)
-```
 
-According to this above code, there are **12** distinct A stations
+With this "tidier" dataset, we can see that there are **`r transit_df_tidy %>% filter(route_name == "A") %>% distinct(line, route_name) %>% count()`** distinct A stations, and **`r transit_df_tidy %>% filter(route_name == 'A' & ada == "TRUE") %>% count()`** A stations
+that are ADA compliant.
 
-```{r}
-transit_df_tidy %>%
-  filter (route_name == 'A' & ada == "TRUE")
-```
-
-And according to this above code, there **107** A stations that are ADA compliant
-
-As a new r coder, I would like to get better at in-line code, but that will be a 
-future task :-)
 
 ### Problem 3: FiveThirtyEight data
 
@@ -220,8 +197,5 @@ composite_538 =
             
 composite_again =
   left_join(composite_538, unemployment_df, by = c("month", "year"))
-            
-
-  
 ```
 .
