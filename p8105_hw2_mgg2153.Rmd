@@ -7,7 +7,8 @@ output: github_document
 
 ## Hello and welcome to the second homework
 
-The first order of business is to load the tidyverse!
+The first order of business is to load the tidyverse, which I did in a code chunk
+but I am hiding the chunk from showing when the file it knit :-)
 ```{r setup, include=FALSE}
 library(tidyverse)
 ```
@@ -19,13 +20,14 @@ library(tidyverse)
 transit_df = read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
   janitor::clean_names() %>%
   select(line, station_name, station_latitude, station_longitude, 
-         route1:route11, entrance_type, entry, ada) %>%
+         route1:route11, entrance_type, entry, vending, ada) %>%
   mutate(
     entry = recode(entry, "YES" = "TRUE", "NO" = "FALSE")
   )
 
 print(transit_df)
-#I want to retain:  line, station, name, station latitude / longitude, routes served, entry, vending, entrance type, and ADA compliance
+#I want to retain:  line, station, name, station latitude / longitude, routes served, 
+#entry, vending, entrance type, and ADA compliance
   
 ```
 
@@ -44,7 +46,32 @@ code above, you can see that I:
 The dataset has **`r nrow(transit_df)`** observations and **`r ncol(transit_df)`** variables, 
 which are: **`r names(transit_df)`**  
 
+Using the code below, we can identify the number of distinct stations:
+```{r}
+transit_df %>%
+  distinct(line, station_name)
 
+```
+Based off the output, we can see that there are **465** distinct stations.
+
+To determine how many stations are ADA compliant, we can run the following code:
+
+```{r}
+transit_df %>%
+  filter(ada == "TRUE")
+
+```
+And we can see that there are **468** stations that are ADA compliant.
+
+Finally, we want to see what the proportion of station entrances/exits without
+vending allow entrance, which we can find by running the following code:
+
+```{r}
+transit_df %>%
+  filter (vending == "NO" & entry == "TRUE")
+```
+And we can see that **69** stations without vending allow entry (this is actually
+really cool info to be exploring lol)
 
 
 ```{r route_pivot}
