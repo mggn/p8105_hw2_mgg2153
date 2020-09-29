@@ -87,14 +87,19 @@ normalized, the routes should be collapsed into one variable. We can normalize/
 
 transit_df_tidy =
   transit_df %>%
+  mutate(
+    route8 = as.character(route8),
+    route9 = as.character(route9),
+    route10 = as.character(route10),
+    route11 = as.character(route11)
+    ) %>%
   pivot_longer(
-  transit_df,
     route1:route11,
     names_to = "route_num",
-    values_to = "route"
+    values_to = "route_name"
   )
 
-print(transit_df_tidy)
+print(transit_df_tidy) #turn to as.character
 ```
 
 
@@ -109,7 +114,7 @@ pols_df = read_csv("./data/pols-month.csv") %>%
     month = month.abb[as.factor(month)]
   ) %>%
   mutate(
-    president <- ifelse(prez_gop == 1, "gop", "dem")
+    president <- ifelse(prez_gop == 1, "gop", "dem") #need to take into account that in 1974, gop is 2; can change 2 to 1?
   ) %>%
   select(-prez_gop, -prez_dem, -day)
   
@@ -139,11 +144,12 @@ unemployment_df = read_csv("./data/unemployment.csv") %>%
   )
  
 composite_538 =
-  left_join(pols_df, snp_df, unemployment_df, by = "month")
-    
+  left_join(pols_df, snp_df, by = c("month", "year"))
+            
+composite_again =
+  left_join(composite_538, unemployment_df, by = c("month", "year"))
+            
 
-print(pols_df)
-print(snp_df)
   
 ```
 .
