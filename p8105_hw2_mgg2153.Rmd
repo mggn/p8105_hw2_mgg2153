@@ -154,6 +154,17 @@ that are ADA compliant.
 
 ### Problem 3: FiveThirtyEight data
 
+To start I will:
+(1) load in the pols dataset
+(2) clean names
+(3) separate the date into three different variables, month, day, year
+(4) format date into text form using month.abb
+(5) create a new president variable
+(6) keep only the variables that Jeff wants us to keep lol
+
+I will then clean the datasets snp and unemployment in a similar way to standardize
+before performing a left merge
+
 ```{r 538_data}
 
 pols_df = read_csv("./data/pols-month.csv") %>%
@@ -163,7 +174,11 @@ pols_df = read_csv("./data/pols-month.csv") %>%
     month = month.abb[as.factor(month)]
   ) %>%
   mutate(
-    president <- ifelse(prez_gop == 1, "gop", "dem") #need to take into account that in 1974, gop is 2; can change 2 to 1?
+    president = case_when(
+      prez_gop == 1 ~ "gop",
+      prez_gop == 2 ~ "gop",
+      prez_dem == 1 ~ "dem"
+    )
   ) %>%
   select(-prez_gop, -prez_dem, -day)
   
@@ -198,4 +213,5 @@ composite_538 =
 composite_again =
   left_join(composite_538, unemployment_df, by = c("month", "year"))
 ```
-.
+
+#### About the FiveThirtyEight data
