@@ -107,7 +107,8 @@ how many are ADA compliant:
 
 ```{r}
 transit_df_tidy %>%
-  filter(route_name == "A")
+  filter(route_name == "A") %>%
+  distinct(line, route_name)
 ```
 
 
