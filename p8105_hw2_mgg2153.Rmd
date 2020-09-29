@@ -131,9 +131,15 @@ unemployment_df = read_csv("./data/unemployment.csv") %>%
     Jan:Dec,
     names_to = "month",
     values_to = "pct_unemployed"
+  ) %>%
+  rename(
+    year = Year
+  ) %>% mutate (
+    month = month.abb[as.factor(month)]
   )
  
-  
+composite_538 =
+  left_join(pols_df, snp_df, unemployment_df, by = "month")
     
 
 print(pols_df)
