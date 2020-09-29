@@ -9,6 +9,7 @@ output: github_document
 
 The first order of business is to load the tidyverse, which I did in a code chunk
 but I am hiding the chunk from showing when the file it knit :-)
+I also loaded the readxl package, as it is needed for the Mr. Trash Wheel dataset
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(readxl)
@@ -16,12 +17,12 @@ library(readxl)
 
 ### Problem 1: Mr. Trash Wheel (done in class)
 
+We will read in the precipitation data for 2017 and 2018
+Note: file name in lecture is different than the file name used below
 ```{r}
-path_to_data = "./data/Trash-Wheel-Collection-Totals-7-2020-1.xlsx"
 
 trashwheel_df = 
-	read_xlsx(
-		path = path_to_data,
+	read_xlsx("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
 		sheet = "Mr. Trash Wheel",
 		range = cell_cols("A:N")) %>% 
 	janitor::clean_names() %>% 
@@ -30,13 +31,9 @@ trashwheel_df =
 		sports_balls = round(sports_balls),
 		sports_balls = as.integer(sports_balls)
 	)
-```
-Read precipitation data! For 2018 and 2017. 
-```{r}
-'
+
 precip_2018 = 
-	read_excel(
-		"./data/Trash-Wheel-Collection-Totals-7-2020-1.xlsx",
+	read_excel( "./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
 		sheet = "2018 Precipitation",
 		skip = 1
 	) %>% 
@@ -44,9 +41,10 @@ precip_2018 =
 	drop_na(month) %>% 
 	mutate(year = 2018) %>% 
 	relocate(year)
+
 precip_2017 = 
 	read_excel(
-		"./data/Trash-Wheel-Collection-Totals-7-2020-1.xlsx",
+		"./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
 		sheet = "2017 Precipitation",
 		skip = 1
 	) %>% 
@@ -55,18 +53,37 @@ precip_2017 =
 	mutate(year = 2017) %>% 
 	relocate(year)
 ```
-Now combine annual precipitation dataframes. In the following code chunk, I create a "helper" tibble that contains pairs of numeric and character ways of representing month, and then merge that (using month number as a key) with the precipitation dataset. This technique is one I use often when I need to recode a moderate or large number of values for a variable. 
+
+
+Next, the two dataframes will be combined by the variable month. This will be 
+possible through the creation of dataframe month_df, and then performing a left
+join using the variable month
+
 ```{r}
 month_df = 
 	tibble(
 		month = 1:12,
 		month_name = month.name
 	)
+
 precip_df = 
 	bind_rows(precip_2018, precip_2017)
+
 precip_df =
 	left_join(precip_df, month_df, by = "month")
 ```
+
+#### About the Mr. Trashwheel dataset
+
+Mr. Trashwheel is a "water vessel that removes trash from the Inner Harbor in
+Baltimore, MD." Mr. Trashwheel has eyes! 
+
+There are a total of **`r nrow(trashwheel_df)`** observations and **`r ncol(trashwheel_df)`**
+variables, which are **`r names(trashwheel_df)`**
+
+The median number of sports balls found in a dumpster in 2017 was **`r trashwheel_df %>% filter(year == 2017) %>% pull(sports_balls) %>% median()`**.
+
+The total precipitation in 2018 was **`r precip_df %>% filter(year == 2018) %>% pull(total) %>% sum()`** inches.
 
 ### Problem 2: NYC transit data
 
@@ -100,35 +117,16 @@ code above, you can see that I:
 The dataset has **`r nrow(transit_df)`** observations and **`r ncol(transit_df)`** variables, 
 which are: **`r names(transit_df)`**  
 
-Using the code below, we can identify the number of distinct stations:
-```{r}
-transit_df %>%
-  distinct(line, station_name)
+There are **`r transit_df %>% distinct(line, station_name) %>% count()`** distinct stations.
 
-```
-Based off the output, we can see that there are **465** distinct stations.
+There are **`r transit_df %>% filter(ada == "TRUE") %>% count()`** stations that are ADA compliant.
 
-To determine how many stations are ADA compliant, we can run the following code:
-
-```{r}
-transit_df %>%
-  filter(ada == "TRUE")
-
-```
-And we can see that there are **468** stations that are ADA compliant.
-
-Finally, we want to see what the proportion of station entrances/exits without
-vending allow entrance, which we can find by running the following code:
-
-```{r}
-transit_df %>%
-  filter (vending == "NO" & entry == "TRUE")
-```
-And we can see that **69** stations without vending allow entry (this is actually
-really cool info to be exploring lol)
+And we can see that **`r transit_df %>% filter(vending == "NO" & entry == "TRUE") %>% count()`** stations without vending allow entry
 
 
-After running these commands, Jeff asks us:
+
+After running these commands, Jeff asks us:  
+
 #### are these data tidy?
 
 To which I respond no! And Hadley Wickham would say "hell no"
