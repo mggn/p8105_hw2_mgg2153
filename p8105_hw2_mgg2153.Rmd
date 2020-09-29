@@ -111,6 +111,17 @@ transit_df_tidy %>%
   distinct(line, route_name)
 ```
 
+According to this above code, there are **12** distinct A stations
+
+```{r}
+transit_df_tidy %>%
+  filter (route_name == 'A' & ada == "TRUE")
+```
+
+And according to this above code, there **107** A stations that are ADA compliant
+
+As a new r coder, I would like to get better at in-line code, but that will be a 
+future task :-)
 
 ### Problem 3: FiveThirtyEight data
 
