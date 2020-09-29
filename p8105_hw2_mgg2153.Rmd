@@ -99,7 +99,15 @@ transit_df_tidy =
     values_to = "route_name"
   )
 
-print(transit_df_tidy) #turn to as.character
+print(transit_df_tidy)
+```
+
+And then finally, we can find the distinct stations for the A train, and of those,
+how many are ADA compliant:
+
+```{r}
+transit_df_tidy %>%
+  filter(route_name == "A")
 ```
 
 
