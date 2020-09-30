@@ -117,7 +117,7 @@ There are **`r transit_df %>% distinct(line, station_name) %>% count()`** distin
 There are **`r transit_df %>% filter(ada == "TRUE") %>% count()`** stations that are ADA compliant.
 
 And we can see that **`r transit_df %>% filter(vending == "NO" & entry == "TRUE") %>% count()`** stations without vending allow entry,
-meaning the proportion is **`r (transit_df %>% filter(vending == "NO" & entry == "TRUE") %>% count())/(transit_df %>% filter(entry == "TRUE") %>% count())`**
+meaning the proportion is **`r (transit_df %>% filter(vending == "NO" & entry == "TRUE") %>% count())/(transit_df %>% filter(vending == "NO") %>% count())`**
 
 
 After running these commands, Jeff asks us:  
