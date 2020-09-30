@@ -19,7 +19,7 @@ library(readxl)
 
 We will read in the precipitation data for 2017 and 2018
 Note: file name in lecture is different than the file name used below
-```{r}
+```{r trashwheel}
 
 trashwheel_df = 
 	read_xlsx("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
@@ -159,7 +159,7 @@ To start I will:
 (2) clean names
 (3) separate the date into three different variables, month, day, year
 (4) format date into text form using month.abb
-(5) create a new president variable
+(5) create a new president variable using case_when
 (6) keep only the variables that Jeff wants us to keep lol
 
 I will then clean the datasets snp and unemployment in a similar way to standardize
@@ -215,3 +215,25 @@ composite_again =
 ```
 
 #### About the FiveThirtyEight data
+
+The original datasets, pols-month, snp, and unemployment, came from the FiveThirtyEight
+website founded by statistician Nate Silver (source: p8105 webpage under datasets).
+Pols-month had information relating to the "number of national politicians who are democratic
+or republican at a given time" (https://p8105.com/dataset_fivethirtyeight.html). A fun 
+snippet of information from this data set is that in 1974, there were 2 republican presidents.
+This is because 1974 was the year that Nixon was impeached.
+
+the snp dataset contained information related to "Standard & Poor’s stock market index (S&P), 
+often used as a representative measure of stock market as a whole." The unemployment
+dataset contained percentage unemployment by month and year.
+
+When these three datasets were combined into my composite_again dataset (done through two
+left joins), the result is the following:
+
+there are **`r nrow(composite_again)`** observations and **`r ncol(composite_again)`** variables, 
+which are: **`r names(composite_again)`**  
+
+The dataset includes observations from the years **`r min(pull(composite_again, year))`** and **`r max(pull(composite_again, year))`**.
+The final data is also tidier than the original datasets, as we collapsed some columns into one column (pivot_longer on month)
+as well as cleaned variable names to follow good naming conventions, and collapsed two separate prez variables into one president variable.
+
